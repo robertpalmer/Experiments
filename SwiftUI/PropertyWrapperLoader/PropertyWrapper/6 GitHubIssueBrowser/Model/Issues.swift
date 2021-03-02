@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Issues: Codable {
+struct Issue: Codable {
     let id: Int
     let url: URL
     let number: Int

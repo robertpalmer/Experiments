@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct RepositoryScreen: View {
-    @JSONURLRequest3 var respository: Result<Repository, Error>?
+    @SimpleLazyJSONURLRequest var repository: Result<Repository, Error>?
     
     init(url: URL) {
-        _respository = JSONURLRequest3(url: url)
+        _repository = SimpleLazyJSONURLRequest(url: url)
     }
     
     var body: some View {
-        ResultView(respository, failure: Failure(), progress: Progress()) { repo in
+        ResultView(repository, failure: Failure(), progress: Progress()) { repo in
             VStack(alignment: .leading, spacing: 8) {
                 
                 if let description = repo.description {
@@ -23,22 +23,25 @@ struct RepositoryScreen: View {
                         .font(.body)
                 }
                 
-                Link(destination: repo.homepage, label: {
-                    Label(repo.homepage.absoluteString, systemImage: "safari")
-                })
+                if let homepage = repo.homepage {
+                    Link(destination: homepage, label: {
+                        Label(homepage.absoluteString, systemImage: "safari")
+                    })
+                }
                 
                 HStack {
                     Label("\(repo.stargazers_count)", systemImage: "star")
                     Label("\(repo.forks_count)", systemImage: "tuningfork")
                 }
                 
-                if repo.has_issues {
+                if repo.has_issues, let url = repo.issues_url?.cleanURL {
                     Divider()
                     NavigationLink(
-                        destination: IssuesScreen(),
+                        destination: IssuesScreen(issueURL: url),
                         label: {
                             HStack {
                                 Text("Issues")
+                                    .padding()
                                 Spacer()
                                 Text("\(repo.open_issues_count)")
                             }
@@ -52,6 +55,10 @@ struct RepositoryScreen: View {
             .padding(16)
             .navigationBarTitle(repo.name)
         }
+        .onAppear {
+            self._repository.load()
+        }
+
     }
 }
 

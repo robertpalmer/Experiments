@@ -9,10 +9,10 @@ import SwiftUI
 
 struct RepoSearchResult: View {
     
-    @JSONURLRequest3 var search: Result<SearchResponse, Error>?
+    @InjectedJSONURLRequest var search: Result<SearchResponse, Error>?
     
     init(query: String) {
-        _search = JSONURLRequest3(url: .repoSearch(query: query))
+        _search = InjectedJSONURLRequest(url: .repoSearch(query: query))
     }
     
     var body: some View {
@@ -43,8 +43,6 @@ struct Progress: View {
     }
 }
 
-
-
 struct ResultView<Value, ErrorView: View, ProgressView: View, ContentView: View>: View {
     
     let result: Result<Value, Error>?
@@ -64,8 +62,7 @@ struct ResultView<Value, ErrorView: View, ProgressView: View, ContentView: View>
         self.progressView = progress
         self.contentView = content
     }
-    
-    
+
     var body: some View {
         switch result {
         case .failure:

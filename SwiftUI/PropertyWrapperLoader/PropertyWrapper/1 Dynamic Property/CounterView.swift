@@ -8,7 +8,7 @@ class Box<Value>: ObservableObject {
     }
 }
 
-@propertyWrapper struct Timer: DynamicProperty {
+@propertyWrapper struct Counter: DynamicProperty {
 
     @ObservedObject var box = Box(value: 0)
     private var timer: Foundation.Timer?
@@ -25,9 +25,9 @@ class Box<Value>: ObservableObject {
     var wrappedValue: Int { box.value }
 }
 
-struct TimerView: View {
+struct CounterView: View {
         
-    @Timer var counter: Int
+    @Counter var counter: Int
     
     var body: some View {
         Text("Counter \(counter)")
@@ -36,6 +36,6 @@ struct TimerView: View {
 
 struct TimerView_Previews: PreviewProvider {
     static var previews: some View {
-        TimerView()
+        CounterView()
     }
 }

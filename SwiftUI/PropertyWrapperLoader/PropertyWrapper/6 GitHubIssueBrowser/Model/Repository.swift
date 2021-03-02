@@ -17,6 +17,14 @@ struct Repository: Codable {
     let watchers_count: Int
     let forks_count: Int
     let has_issues: Bool
+    let issues_url: String?
     let open_issues_count: Int
-    let homepage: URL
+    let homepage: URL?
+}
+
+extension String {
+    var cleanURL: URL? {
+        let cleaned = replacingOccurrences(of: "{/number}", with: "")
+        return URL(string: cleaned)
+    }
 }

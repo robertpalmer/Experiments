@@ -8,19 +8,32 @@
 import SwiftUI
 
 struct IssuesScreen: View {
-    
+
     @State var selection: String = "open"
+    let issueURL: URL
+    
+    private var issueStateURL: URL {
+        issueURL.parameterdized(queryItem: URLQueryItem(name: "state", value: selection))
+    }
+    
     var body: some View {
+        VStack {
+            Picker("", selection: $selection) {
+                Text("Open").tag("open")
+                Text("Closed").tag("closed")
+            }
+            .pickerStyle(SegmentedPickerStyle())
         
-        Picker("", selection: $selection) {
-            Text("Open").tag("open")
-            Text("Closed").tag("close")
+            IssuesList(url: issueStateURL)
         }
-        .pickerStyle(SegmentedPickerStyle())
-            
-        Text("empty")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
- 
+    }
+}
+
+extension URL {
+    func parameterdized(queryItem: URLQueryItem) -> URL {
+        var components = URLComponents(url: self, resolvingAgainstBaseURL: true)!
+        components.queryItems = [queryItem]
+        return components.url!
     }
 }
 

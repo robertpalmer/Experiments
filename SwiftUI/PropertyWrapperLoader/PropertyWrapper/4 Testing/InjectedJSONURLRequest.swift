@@ -29,7 +29,7 @@ class DisposeBag {
     var cancellables = Set<AnyCancellable>()
 }
 
-@propertyWrapper struct JSONURLRequest3<Value>: DynamicProperty where Value: Decodable {
+@propertyWrapper struct InjectedJSONURLRequest<Value>: DynamicProperty where Value: Decodable {
 
     @ObservedObject var box = Box<Result<Value, Error>?>(value: nil)
     @Environment(\.urlClient) private var client: URLClient?
@@ -68,7 +68,7 @@ class DisposeBag {
 }
 
 struct JSONURLRequestView3: View {
-    @JSONURLRequest3(url: URL(string: "https://api.github.com/users/apple/repos")!)
+    @InjectedJSONURLRequest(url: URL(string: "https://api.github.com/users/apple/repos")!)
     var posts: Result<[Repo], Error>?
 
     var body: some View {
